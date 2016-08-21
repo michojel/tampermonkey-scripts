@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         Focus weak skills
-// @namespace    http://tampermonkey.net/
-// @version      0.1
+// @namespace    https://github.com/michojel/tampermonkey-scripts
+// @version      0.2
 // @description  Hide strong skills and focus weak ones in Duolingo skill tree
 // @author       Michal Minář <mic.liamg@gmail.com>
 // @match        https://www.duolingo.com/
 // @grant        none
+// @updateURL    https://raw.githubusercontent.com/michojel/tampermonkey-scripts/master/duolingo.com/focus-weak-skills.js
 // ==/UserScript==
 
 function main() {
