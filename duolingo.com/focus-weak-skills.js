@@ -4,7 +4,7 @@
 // @version      0.2
 // @description  Hide strong skills and focus weak ones in Duolingo skill tree
 // @author       Michal Minář <mic.liamg@gmail.com>
-// @match        https://www.duolingo.com/
+// @match        https://www.duolingo.com/*
 // @grant        none
 // @updateURL    https://raw.githubusercontent.com/michojel/tampermonkey-scripts/master/duolingo.com/focus-weak-skills.js
 // ==/UserScript==
@@ -28,18 +28,35 @@ function main() {
             return res;
         };
 
-        $("div.tree li.skill-tree-row").filter(function(i, elem) {
-            skills = $(elem).children();
-            strong = skills.filter(function(i, elem) {
-                return $(elem).has(generateStrengthClasses("a span", true).join()).size() > 0;
-            });
-            return skills.size() == strong.size();
-        }).hide();
+        hideStrongSkills = function() {
+            $("div.tree li.skill-tree-row").filter(function(i, elem) {
+                skills = $(elem).children();
+                strong = skills.filter(function(i, elem) {
+                    return $(elem).has(generateStrengthClasses("a span", true).join()).size() > 0;
+                });
+                return skills.size() == strong.size();
+            }).hide();
+        };
 
-        $("div.tree li.skill-tree-row span").has(generateStrengthClasses("a span", false).join()).filter(function(i, elem) {
-            spanId = $(elem).attr("id");
-            return typeof spanId == "string" && spanId.length > 0;
-        }).first().focus();
+        focusFirstWeakSkill = function() {
+            $("div.tree li.skill-tree-row span").has(generateStrengthClasses("a span", false).join()).filter(function(i, elem) {
+                spanId = $(elem).attr("id");
+                return typeof spanId == "string" && spanId.length > 0;
+            }).first().focus();
+        };
+
+        previousPath = "";
+
+        hideAndFocus = function() {
+            if (location.pathname == "/" && previousPath != location.pathname) {
+                hideStrongSkills();
+                focusFirstWeakSkill();
+            }
+            previousPath = location.pathname;
+            window.setTimeout(hideAndFocus, 1000);
+        };
+
+        hideAndFocus();
     });
 }
 
